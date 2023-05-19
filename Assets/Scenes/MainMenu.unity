@@ -328,6 +328,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 56b0f6b3284166c499406729a7e5c7a1, type: 3}
   - {fileID: 21300000, guid: 00a358ba34d703d40a737ea02c7b138f, type: 3}
   - {fileID: 21300000, guid: 4f080d836a1054c4fb6a2a3b7ea0b49f, type: 3}
+  - {fileID: 21300000, guid: aa787a7087415774f87e5ff06b45ab18, type: 3}
+  - {fileID: 21300000, guid: e13b42af51b7e9b4fa31dd4b9c3256bd, type: 3}
+  - {fileID: 21300000, guid: b034168ebbfe6b8428fc880bdfa79841, type: 3}
+  - {fileID: 21300000, guid: 664d12f8e9dd29f49bbfbd02c2ed6b4e, type: 3}
+  - {fileID: 21300000, guid: 6fd0f5de0ae1d8b42b18ac6c21395e01, type: 3}
+  - {fileID: 21300000, guid: d48a0c699c92b7c4aa5ddd11974ec8d5, type: 3}
+  - {fileID: 21300000, guid: bf61e9468de474546a61c68fc51482b3, type: 3}
   easterEggImage: {fileID: 1124391748}
   inputField: {fileID: 1919639362}
   showBtn: {fileID: 2101257769}
