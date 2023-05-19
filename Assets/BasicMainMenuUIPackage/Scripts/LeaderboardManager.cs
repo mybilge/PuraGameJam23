@@ -35,7 +35,7 @@ public class LeaderboardManager : MonoBehaviour
 
 
 
-    string leaderboardPublicKey = "1f85a2a070dc6ead6e49e6aebf5a951ac8a9157a5dcdc65813d3a4295e034fa4";
+    string leaderboardPublicKey = "d0d906b8541ca9ecec054408e257f07ea1dd1b322d570508f43a82563a54af8f";
     public void GetLeaderboard()
     {
         LeaderboardCreator.GetLeaderboard(leaderboardPublicKey,((msg)=>
