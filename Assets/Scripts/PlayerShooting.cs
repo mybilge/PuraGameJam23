@@ -9,19 +9,11 @@ public struct GumType
 {
     public Sprite gumSprite;
     public Colors colors;
-    public Action act;
-
-    public GumType(Sprite sp, Colors cl, Action act){
-        gumSprite = sp;
-        colors = cl;
-        this.act = act;
-    }
 
     public GumType(Sprite sp, Colors cl)
     {
         gumSprite = sp;
         colors = cl;
-        this.act = null;
     }
 }
 
@@ -40,6 +32,9 @@ public class PlayerShooting : MonoBehaviour
 {
     Queue<GumType> gumTypeQueue = new Queue<GumType>();
     [SerializeField] GumType[] gumTypeBase;
+
+    [SerializeField] LayerMask zemin;
+    [SerializeField] float exp = 3f;
     
 
     [SerializeField] GameObject bulletPrefab;
@@ -47,10 +42,29 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] int[] rands = { 0, 1, 3 };
     [SerializeField]  int[] olasilik = { 10, 10, 10 };
 
+    [SerializeField] float basiliTutMax = 1f;
+    float tempBasiliTut = 0f;
+    bool canFire = true;
+
 
     private void Awake() {
-        gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
-        gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
+       // gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
+        //gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
+
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
     }
 
 
@@ -85,27 +99,45 @@ public class PlayerShooting : MonoBehaviour
     private void Update() {
 
         //Debug.Log((Colors)RandColorsInt());
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButton(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue))
+            tempBasiliTut+= Time.deltaTime;
+            if(tempBasiliTut> basiliTutMax)
             {
-                Vector3 dir = hit.point -transform.position;
-                dir.y = 0;
-
-                Shoot(dir);
-
-                gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
-                //Debug.Log(gumTypeQueue.Peek().colors);
+                canFire = false;
             }
+        }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            if(canFire)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, zemin))
+                {
+                    Vector3 dir = hit.point - transform.position;
+                    dir.y = 0;
+
+                    float power = MathF.Pow((1+(tempBasiliTut/basiliTutMax)),exp);
+
+                    Shoot(dir.normalized, power);
+
+                    gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
+                    //Debug.Log(gumTypeQueue.Peek().colors);
+                }
+            }            
+
+            tempBasiliTut = 0f;
+            canFire = true;
         }
     }
 
-    void Shoot(Vector3 dir)
+    void Shoot(Vector3 dir, float newPower)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position,Quaternion.identity);
         bullet.GetComponent<Bullet>().gumType = Combine(gumTypeQueue.Dequeue(), gumTypeQueue.Peek());
         bullet.GetComponent<Bullet>().Fire(dir);
+        bullet.GetComponent<Bullet>().power = newPower;
     }
 
     GumType Combine(GumType gumType1, GumType gumType2)

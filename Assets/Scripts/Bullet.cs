@@ -12,20 +12,48 @@ public class Bullet : MonoBehaviour
     [SerializeField] bool reflect;
     private Vector3 _velocity;
     private Vector3 oldvel;
+    [SerializeField] float canTime;
+
+   public float power;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
         GetComponent<Collider>().isTrigger = true;
+
+        switch (gumType.colors)
+        {
+            case Colors.Red:
+                break;
+            case Colors.Green:
+                reflect = true;
+                break;
+            case Colors.Blue:
+                break;
+            case Colors.Orange:
+                break;
+            case Colors.Magenta:
+                break;
+            case Colors.Yellow:
+                break;
+        }
         
     }
+
+    private void Update() {
+        if(gumType.colors == Colors.Green)
+        {
+            canTime -= Time.deltaTime;
+            if(canTime<=0)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
     public void Fire(Vector3 dir){
         this.dir = dir;
         rb.velocity = (Time.fixedDeltaTime * speed * dir);
         oldvel = rb.velocity;
-    }
-
-    private void FixedUpdate() {
-        
     }
 
     private void OnTriggerExit(Collider other) {
@@ -34,23 +62,26 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if(gumType.act != null)
+        switch (gumType.colors)
         {
-            gumType.act();
-        }
-        
-        if(!reflect)
-        {
-            return;
-        }
-
-        /*if(collision.gameObject.tag != "reflect")
-        {
-            oldvel = rb.velocity;
-            return;
-        }*/
-
-        ReflectProjectile(rb, collision.contacts[0].normal);
+            case Colors.Red:
+                break;
+            case Colors.Green:
+                ReflectProjectile(rb, collision.contacts[0].normal);
+                if(collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+                {
+                    StartCoroutine(enemy.GeriSek(collision.GetContact(0).point, power,0.5f));
+                }
+                break;
+            case Colors.Blue:
+                break;
+            case Colors.Orange:
+                break;
+            case Colors.Magenta:
+                break;
+            case Colors.Yellow:
+                break;
+        }        
     }
 
     private void ReflectProjectile(Rigidbody rb, Vector3 reflectVector)
@@ -61,5 +92,8 @@ public class Bullet : MonoBehaviour
         oldvel = _velocity;
     }
 
+    void GreenBullet()
+    {
 
+    }
 }
