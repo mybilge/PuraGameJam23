@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 162411361}
   m_Layer: 0
   m_Name: arka
-  m_TagString: Untagged
+  m_TagString: reflect
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 414293444}
   m_Layer: 0
   m_Name: sag
-  m_TagString: Untagged
+  m_TagString: reflect
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 627523735}
   m_Layer: 0
   m_Name: "\xF6n"
-  m_TagString: Untagged
+  m_TagString: reflect
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -470,7 +470,7 @@ GameObject:
   - component: {fileID: 919648174}
   m_Layer: 0
   m_Name: sol
-  m_TagString: Untagged
+  m_TagString: reflect
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -838,9 +838,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2014167018}
   - component: {fileID: 2014167019}
-  - component: {fileID: 2014167020}
   - component: {fileID: 2014167021}
   - component: {fileID: 2014167022}
+  - component: {fileID: 2014167020}
+  - component: {fileID: 2014167023}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -890,7 +891,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  spriteRenderer: {fileID: 274392080}
 --- !u!54 &2014167021
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -927,3 +927,33 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2014167023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014167017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df33927e7d40650409b06d4f7093730b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gumTypeBase:
+  - gumSprite: {fileID: 0}
+    colors: 0
+  - gumSprite: {fileID: 0}
+    colors: 1
+  - gumSprite: {fileID: 0}
+    colors: 2
+  - gumSprite: {fileID: 0}
+    colors: 3
+  - gumSprite: {fileID: 0}
+    colors: 4
+  - gumSprite: {fileID: 0}
+    colors: 5
+  - gumSprite: {fileID: 0}
+    colors: 6
+  bulletPrefab: {fileID: 2338215855043518333, guid: 4afa490bd775e6342b505f98336c4a19, type: 3}
+  rands: 000000000100000003000000
+  olasilik: 0a0000000a00000064000000

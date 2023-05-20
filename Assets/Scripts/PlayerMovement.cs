@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
     Vector3 movement;
-    [SerializeField] SpriteRenderer spriteRenderer;
     Animator animator;
 
 
