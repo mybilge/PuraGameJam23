@@ -22,13 +22,16 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.z = Input.GetAxisRaw("Vertical");
         movement.Normalize();
-        rb.velocity = Vector3.zero;
 
         if(movement.x != 0)
         {
             animator.SetFloat("Horizontal", movement.x);
         }        
         animator.SetFloat("Speed", movement.sqrMagnitude);
+        if (movement.sqrMagnitude != 0)
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
 
     private void FixedUpdate() {

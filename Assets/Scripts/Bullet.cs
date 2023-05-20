@@ -6,37 +6,30 @@ public class Bullet : MonoBehaviour
 {
     public GumType gumType;
     Rigidbody rb;
-
+    public float power;
     Vector3 dir;
     [SerializeField] float speed;
-    [SerializeField] bool reflect;
+
+    
+    [Header("Green")]
+    [SerializeField] float canTime;
+    [SerializeField] float ittirGreen = 1f;
     private Vector3 _velocity;
     private Vector3 oldvel;
-    [SerializeField] float canTime;
 
-   public float power;
+    [Header("Red")]
+    [SerializeField] float boomRadiusBase = 1f;
+    [SerializeField] float ittirRed = 1f;
+
+    [Header("Blue")]
+    [SerializeField] float sabitBase = 0.5f;
+
+   
+  
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
         GetComponent<Collider>().isTrigger = true;
-
-        switch (gumType.colors)
-        {
-            case Colors.Red:
-                break;
-            case Colors.Green:
-                reflect = true;
-                break;
-            case Colors.Blue:
-                break;
-            case Colors.Orange:
-                break;
-            case Colors.Magenta:
-                break;
-            case Colors.Yellow:
-                break;
-        }
-        
     }
 
     private void Update() {
@@ -51,9 +44,29 @@ public class Bullet : MonoBehaviour
     }
 
     public void Fire(Vector3 dir){
-        this.dir = dir;
-        rb.velocity = (Time.fixedDeltaTime * speed * dir);
-        oldvel = rb.velocity;
+        switch (gumType.colors)
+        {
+            case Colors.Red:
+                this.dir = dir;
+                rb.velocity = (Time.fixedDeltaTime * speed * power * dir);
+                break;
+            case Colors.Green:
+                this.dir = dir;
+                rb.velocity = (Time.fixedDeltaTime * speed * power * dir);
+                oldvel = rb.velocity;
+                canTime*= power;
+                break;
+            case Colors.Blue:
+                this.dir = dir;
+                rb.velocity = (Time.fixedDeltaTime * speed * power * dir);
+                break;
+            case Colors.Cyan:
+                break;
+            case Colors.Magenta:
+                break;
+            case Colors.Yellow:
+                break;
+        }        
     }
 
     private void OnTriggerExit(Collider other) {
@@ -65,17 +78,23 @@ public class Bullet : MonoBehaviour
         switch (gumType.colors)
         {
             case Colors.Red:
+                RedBoom();
                 break;
             case Colors.Green:
-                ReflectProjectile(rb, collision.contacts[0].normal);
+                ReflectProjectile(collision.contacts[0].normal);
                 if(collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
-                    StartCoroutine(enemy.GeriSek(collision.GetContact(0).point, power,0.5f));
+                    StartCoroutine(enemy.GeriSek(collision.GetContact(0).point, power*ittirGreen,0.5f));
                 }
                 break;
             case Colors.Blue:
+                if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemyBlue))
+                {
+                    enemyBlue.Sabit(power*sabitBase);
+                }         
+                Destroy(gameObject);       
                 break;
-            case Colors.Orange:
+            case Colors.Cyan:
                 break;
             case Colors.Magenta:
                 break;
@@ -84,7 +103,7 @@ public class Bullet : MonoBehaviour
         }        
     }
 
-    private void ReflectProjectile(Rigidbody rb, Vector3 reflectVector)
+    private void ReflectProjectile(Vector3 reflectVector)
     {
         _velocity = Vector3.Reflect(oldvel, reflectVector);
         _velocity.y = 0;
@@ -92,8 +111,33 @@ public class Bullet : MonoBehaviour
         oldvel = _velocity;
     }
 
-    void GreenBullet()
-    {
 
+
+    void RedBoom()
+    {
+        var hits = Physics.SphereCastAll(transform.position+Vector3.down*25, boomRadiusBase*power,Vector3.up,50);    
+
+        foreach (var hit in hits)
+        {
+            Debug.Log(hit.transform.name);
+
+            if(hit.transform.TryGetComponent<Enemy>(out var enemy))
+            {
+                if(hit.collider.isTrigger)
+                {
+                    continue;
+                }
+                StartCoroutine(enemy.GeriSek(hit.point, power*ittirRed, 0.5f));
+            }
+
+
+            if (hit.transform.TryGetComponent<Player>(out var player))
+            {
+                player.GeriSek(hit.point, power * ittirRed);
+            }
+        }   
+
+        Destroy(gameObject); 
     }
+
 }

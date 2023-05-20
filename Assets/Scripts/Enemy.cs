@@ -53,6 +53,7 @@ public class Enemy : MonoBehaviour
             if(tempGreen<0)
             {
                 green = false;
+                agent.speed = normalSpeed;
             }
             return;
         }
@@ -69,14 +70,14 @@ public class Enemy : MonoBehaviour
             agent.speed = chaseSpeed;
             agent.SetDestination(player.position);
             return;
-        }       
+        }
+        agent.speed = normalSpeed;  
 
         if(destination == null)
         {
             destination = patrolPointsTf[Random.Range(0,patrolPointsTf.Length)].position;
            
             agent.SetDestination(destination.Value);
-            agent.speed = normalSpeed;
         }
         else{
             if(Vector3.Distance(transform.position,destination.Value)<0.1f)
@@ -108,7 +109,18 @@ public class Enemy : MonoBehaviour
         if (other.gameObject.TryGetComponent<Player>(out Player p))
         {
             p.HasarAl();
-            temp = stunTime;
+            if(temp<stunTime){
+                temp = stunTime;
+            }
+            
+        }
+    }
+
+    public void Sabit(float sabitTime)
+    {
+        if (temp < sabitTime)
+        {
+            temp = sabitTime;
         }
     }
 
@@ -117,8 +129,9 @@ public class Enemy : MonoBehaviour
         agent.speed =0;
         rb.isKinematic = false;
         green = true;
-        Vector3 dir = transform.position - impactPoint;
+        Vector3 dir = transform.TransformPoint(GetComponent<BoxCollider>().center) - impactPoint;
         dir.y = 0;
+        Debug.Log(dir.normalized);
         rb.AddForce(force*dir.normalized,ForceMode.Impulse);
         tempGreen = waitTime;
         yield return new WaitForSeconds(waitTime);

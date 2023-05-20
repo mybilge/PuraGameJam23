@@ -66,10 +66,12 @@ MonoBehaviour:
   gumType:
     gumSprite: {fileID: 0}
     colors: 0
-  speed: 100
-  reflect: 0
-  canTime: 5
   power: 5
+  speed: 100
+  canTime: 5
+  ittirGreen: 1
+  boomRadiusBase: 10
+  ittirRed: 10
 --- !u!135 &3907326107816400435
 SphereCollider:
   m_ObjectHideFlags: 0

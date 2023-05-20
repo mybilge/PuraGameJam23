@@ -25,7 +25,7 @@ public enum Colors
     Blue,
     Magenta,
     Yellow,
-    Orange
+    Cyan
 }
 
 public class PlayerShooting : MonoBehaviour
@@ -51,20 +51,20 @@ public class PlayerShooting : MonoBehaviour
        // gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
         //gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
 
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
 
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
 
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
     }
 
 
@@ -102,8 +102,9 @@ public class PlayerShooting : MonoBehaviour
         if(Input.GetMouseButton(0))
         {
             tempBasiliTut+= Time.deltaTime;
-            if(tempBasiliTut> basiliTutMax)
+            if(tempBasiliTut> basiliTutMax && canFire)
             {
+                GetComponent<Player>().HasarAl();
                 canFire = false;
             }
         }
@@ -136,8 +137,8 @@ public class PlayerShooting : MonoBehaviour
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position,Quaternion.identity);
         bullet.GetComponent<Bullet>().gumType = Combine(gumTypeQueue.Dequeue(), gumTypeQueue.Peek());
-        bullet.GetComponent<Bullet>().Fire(dir);
         bullet.GetComponent<Bullet>().power = newPower;
+        bullet.GetComponent<Bullet>().Fire(dir);
     }
 
     GumType Combine(GumType gumType1, GumType gumType2)
@@ -153,7 +154,7 @@ public class PlayerShooting : MonoBehaviour
                 retGumType = gumTypeBase[ (int)Colors.Red];
                 break;
             case 1:
-                retGumType = gumTypeBase[ (int)Colors.Orange];
+                retGumType = gumTypeBase[ (int)Colors.Cyan];
                 break;
             case 2:
                 retGumType = gumTypeBase[ (int)Colors.Green];
@@ -169,8 +170,6 @@ public class PlayerShooting : MonoBehaviour
                 break;
             
         }
-        
-        //retGumType.act = Actaa;
         
         return retGumType;
     }
