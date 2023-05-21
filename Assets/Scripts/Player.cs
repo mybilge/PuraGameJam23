@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 public class Player : MonoBehaviour
@@ -19,14 +20,23 @@ public class Player : MonoBehaviour
     float cekmeHizi;
     public Transform zehirPrefab;
 
+    [SerializeField] GameObject[] cans;
+
     [SerializeField] float levelTime;
     float levelTimeTemp;
     [SerializeField] Image siyah;
     [SerializeField] GameObject asansorKapıSol;
     [SerializeField] GameObject asansorKapıSağ;
     [SerializeField] GameObject asansorMain;
+
+    [SerializeField] TextMeshProUGUI zamanText;
     bool kazandi;
     bool asansor;
+
+    bool oldu;
+
+    [SerializeField] Image kazanImage;
+    [SerializeField] Image kaybetImage;
 
     
 
@@ -43,19 +53,29 @@ public class Player : MonoBehaviour
         {
             return;
         }
+
         can--;
+        cans[(can+300)%3].SetActive(false);
         if(can<=0)
         {
+            oldu = true;
             Die();
         }
     } 
 
     public void Die(){
-
+        Debug.Log("aaa");
+        kaybetImage.gameObject.SetActive(true);
+        siyah.DOFade(0, 10f).OnComplete(() =>
+        {
+            
+            SceneManager.LoadScene("MainMenu");
+        });
     }
 
     private void Update() {
         levelTimeTemp += Time.deltaTime;
+        zamanText.text =(Mathf.Max(levelTime- levelTimeTemp,0)) .ToString("F2");
         if(levelTimeTemp>= levelTime && !asansor)
         {
             asansor = true;
@@ -107,9 +127,14 @@ public class Player : MonoBehaviour
 
     public void YeniLevel()
     {
+        if(oldu)
+        {
+            return;
+        }
         kazandi = true;
-        siyah.DOFade(1,0.5f).OnComplete(()=>{
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+        kazanImage.gameObject.SetActive(true);
+        siyah.DOFade(0,10f).OnComplete(()=>{
+            SceneManager.LoadScene("MainMenu");
         });
     }
 

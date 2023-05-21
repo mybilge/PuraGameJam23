@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 
 [System.Serializable]
@@ -31,11 +32,15 @@ public enum Colors
 
 public class PlayerShooting : MonoBehaviour
 {
-    Queue<GumType> gumTypeQueue = new Queue<GumType>();
+    List<GumType> gumTypeQueue = new List<GumType>();
     [SerializeField] GumType[] gumTypeBase;
+
+    [SerializeField] Sprite[] kutudaBase;
 
     [SerializeField] LayerMask zemin;
     [SerializeField] float exp = 3f;
+
+    [SerializeField] float maxTiklama = 0.5f;
     
 
     [SerializeField] GameObject bulletPrefab;
@@ -55,30 +60,38 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] GameObject hookCursor;
     float? shotgunAmount = null;
 
+    [SerializeField] Transform[] sakizKutusundakiSakizlar;
 
+    [SerializeField] float animSuresi;
+
+    [SerializeField] Sprite[] sakizBirlesims;
+    [SerializeField] SpriteRenderer sakizBirlesimTek;
+
+
+float tempTiklama;
     private void Awake() {
-       // gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
-        //gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
+        gumTypeQueue.Add(new GumType(null, (Colors)RandColorsInt()));
+        gumTypeQueue.Add(new GumType(null, (Colors)RandColorsInt()));
+        gumTypeQueue.Add(new GumType(null, (Colors)RandColorsInt()));
+        gumTypeQueue.Add(new GumType(null, (Colors)RandColorsInt()));
+        gumTypeQueue.Add(new GumType(null, (Colors)RandColorsInt()));
 
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
+        for (int i = 0; i < sakizKutusundakiSakizlar.Length; i++)
+        {
+            sakizKutusundakiSakizlar[i].GetComponent<SpriteRenderer>().sprite = kutudaBase[(int)(gumTypeQueue[i].colors)];
+            sakizBirlesimTek.sprite = sakizBirlesims[ (int)(Combine(gumTypeQueue[0], gumTypeQueue[1]).colors)];
+        }
 
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        
 
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
 
         UITemizle();
     }
 
+    private void Start() {
+        //sakizKutusundakiSakizlar[0].DOLocalMoveX(0.7f, animSuresi);
+        //sakizKutusundakiSakizlar[1].DOLocalMoveX(0.7f, animSuresi);
+    }
 
     int RandColorsInt()
     {
@@ -109,6 +122,9 @@ public class PlayerShooting : MonoBehaviour
     }
 
     private void Update() {
+
+
+        
 
         //Debug.Log((Colors)RandColorsInt());
         if(Input.GetMouseButton(0))
@@ -190,7 +206,13 @@ public class PlayerShooting : MonoBehaviour
 
                     Shoot(dir.normalized, power);
 
-                    gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
+                    gumTypeQueue.Add(new GumType(null, (Colors)RandColorsInt()));
+                    for (int i = 0; i < sakizKutusundakiSakizlar.Length; i++)
+                    {
+                        sakizKutusundakiSakizlar[i].GetComponent<SpriteRenderer>().sprite = kutudaBase[(int)(gumTypeQueue[i].colors)];
+                        sakizBirlesimTek.sprite = sakizBirlesims[(int)(Combine(gumTypeQueue[0], gumTypeQueue[1]).colors)];
+                        
+                    }
                     //Debug.Log(gumTypeQueue.Peek().colors);
                 }
             }
@@ -211,7 +233,8 @@ public class PlayerShooting : MonoBehaviour
     void Shoot(Vector3 dir, float newPower)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position,Quaternion.identity);
-        bullet.GetComponent<Bullet>().gumType = Combine(gumTypeQueue.Dequeue(), gumTypeQueue.Peek());
+        bullet.GetComponent<Bullet>().gumType = Combine(gumTypeQueue[0], gumTypeQueue[1]);
+        gumTypeQueue.RemoveAt(0);
         bullet.GetComponent<Bullet>().power = newPower;
         bullet.GetComponent<Bullet>().Fire(dir,shotgunAmount);
         bullet.GetComponent<Bullet>().mermiSprite.sprite = bullet.GetComponent<Bullet>().gumType.gumSprite;

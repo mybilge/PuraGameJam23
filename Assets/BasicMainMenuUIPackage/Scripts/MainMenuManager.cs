@@ -9,13 +9,9 @@ public class MainMenuManager : MonoBehaviour
 
     private void Awake() {
 
-        if(PlayerPrefs.HasKey("Username"))
-        {
-            OpenMenu(menuList[1]);
-        }
-        else{
+        
             OpenMenu(menuList[0]);
-        }
+        
         
     }
 

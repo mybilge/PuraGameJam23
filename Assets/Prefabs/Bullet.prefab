@@ -70,17 +70,17 @@ MonoBehaviour:
   speed: 100
   mermiSprite: {fileID: 2338215856204016585}
   PatlamaEfektRedPrefab: {fileID: 1090580127610363195, guid: f8bf895e7c27a5b45921227b6c7606db, type: 3}
-  canTime: 5
-  ittirGreen: 1
-  boomRadiusBase: 10
-  ittirRed: 10
-  sabitBase: 0.5
-  maxRangeShotgun: 3
-  ittirYellow: 1
+  canTime: 2
+  ittirGreen: 2
+  boomRadiusBase: 0.5
+  ittirRed: 3
+  sabitBase: 1
+  maxRangeShotgun: 5
+  ittirYellow: 3
   cekmeHiziBase: 1
-  hookMaxRange: 3
+  hookMaxRange: 5
   zehirRadiusBase: 0.5
-  zehirYavaslatmaBase: 1
+  zehirYavaslatmaBase: 2
 --- !u!135 &3907326107816400435
 SphereCollider:
   m_ObjectHideFlags: 0

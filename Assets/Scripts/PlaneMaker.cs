@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlaneMaker : MonoBehaviour
 {
     Vector3 scale;
-    [SerializeField] SpriteRenderer zemin   ;
+    [SerializeField] SpriteRenderer[] zemin   ;
 
 
     List<SpriteRenderer> allSprites = new List<SpriteRenderer>();
@@ -37,7 +37,10 @@ public class PlaneMaker : MonoBehaviour
     private void Start() {
         allSprites.AddRange(GameObject.FindObjectsOfType<SpriteRenderer>());
 
-        allSprites.Remove(zemin);
+        foreach (var item in zemin)
+        {
+            allSprites.Remove(item);
+        }
     }
 
 

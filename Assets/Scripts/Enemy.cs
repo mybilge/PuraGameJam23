@@ -44,6 +44,13 @@ public class Enemy : MonoBehaviour
 
     private void Update() {
 
+        if (agent.velocity.x != 0)
+        {
+            animator.SetFloat("Horizontal", Mathf.Clamp(agent.velocity.x, -1f, 1f));
+        }
+        animator.SetFloat("Speed", Mathf.Min(agent.velocity.sqrMagnitude, agent.speed));
+
+
         if(temp>0)
         {
             temp -= Time.deltaTime;
@@ -70,11 +77,7 @@ public class Enemy : MonoBehaviour
             agent.speed = normalSpeed* hizcarpan;
         }
 
-        if (agent.velocity.x != 0)
-        {
-            animator.SetFloat("Horizontal", Mathf.Clamp(agent.velocity.x,-1f,1f));
-        }
-        animator.SetFloat("Speed", agent.velocity.sqrMagnitude);
+        
 
         if(chasing)
         {

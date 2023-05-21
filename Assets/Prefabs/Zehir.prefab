@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zehirAmount: 0
+  canTime: 1.5
 --- !u!65 &2078126352322069637
 BoxCollider:
   m_ObjectHideFlags: 0
