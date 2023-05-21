@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
 
 
+
+
     private void Awake() {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
@@ -35,6 +37,14 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        rb.MovePosition(Time.fixedDeltaTime * speed * movement + rb.position);
+
+        if(!GetComponent<Player>().isHooking)
+        {
+            rb.MovePosition(Time.fixedDeltaTime * speed * movement + rb.position);
+        }
+        else{
+            rb.velocity = Vector3.zero;
+        }
+        
     }
 }

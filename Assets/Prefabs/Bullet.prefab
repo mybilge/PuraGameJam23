@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3907326107816400435}
   m_Layer: 0
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -72,6 +72,9 @@ MonoBehaviour:
   ittirGreen: 1
   boomRadiusBase: 10
   ittirRed: 10
+  sabitBase: 0.5
+  maxRangeShotgun: 3
+  ittirYellow: 1
 --- !u!135 &3907326107816400435
 SphereCollider:
   m_ObjectHideFlags: 0

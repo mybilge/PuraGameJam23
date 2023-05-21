@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] Transform[] patrolPointsTf;
-    NavMeshAgent agent;
+    public NavMeshAgent agent;
     Vector3? destination;
 
     [SerializeField] float normalSpeed;
@@ -27,13 +27,15 @@ public class Enemy : MonoBehaviour
 
     float tempGreen = 0f;
 
+    public float hizcarpan = 1f;
+
     private void Awake() {
 
         GetComponent<SphereCollider>().radius = radius;
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        agent.speed = normalSpeed;
-        lastSpeed = normalSpeed;
+        agent.speed = normalSpeed* hizcarpan;
+        lastSpeed = normalSpeed* hizcarpan;
         animator = GetComponent<Animator>();
         animator.SetFloat("Horizontal", 1f);
     }
@@ -53,11 +55,16 @@ public class Enemy : MonoBehaviour
             if(tempGreen<0)
             {
                 green = false;
-                agent.speed = normalSpeed;
+                agent.speed = normalSpeed*hizcarpan;
             }
             return;
         }
         rb.isKinematic = true;
+
+        if(agent.speed == 0)
+        {
+            agent.speed = normalSpeed* hizcarpan;
+        }
 
         if (agent.velocity.x != 0)
         {
@@ -67,11 +74,10 @@ public class Enemy : MonoBehaviour
 
         if(chasing)
         {
-            agent.speed = chaseSpeed;
+            agent.speed = chaseSpeed* hizcarpan;
             agent.SetDestination(player.position);
             return;
         }
-        agent.speed = normalSpeed;  
 
         if(destination == null)
         {
@@ -131,7 +137,7 @@ public class Enemy : MonoBehaviour
         green = true;
         Vector3 dir = transform.TransformPoint(GetComponent<BoxCollider>().center) - impactPoint;
         dir.y = 0;
-        Debug.Log(dir.normalized);
+        //Debug.Log(dir.normalized);
         rb.AddForce(force*dir.normalized,ForceMode.Impulse);
         tempGreen = waitTime;
         yield return new WaitForSeconds(waitTime);
@@ -142,7 +148,7 @@ public class Enemy : MonoBehaviour
         {
             destination = patrolPointsTf[Random.Range(0, patrolPointsTf.Length)].position;
             agent.SetDestination(destination.Value);
-            agent.speed = normalSpeed;
+            agent.speed = normalSpeed* hizcarpan;
             chasing = false;
         }
         else{
@@ -151,13 +157,13 @@ public class Enemy : MonoBehaviour
                 chasing = true;
                 destination = null;
                 agent.SetDestination(player.position);
-                agent.speed = chaseSpeed;
+                agent.speed = chaseSpeed* hizcarpan;
             }
 
             else{
                 destination = patrolPointsTf[Random.Range(0, patrolPointsTf.Length)].position;
                 agent.SetDestination(destination.Value);
-                agent.speed = normalSpeed;
+                agent.speed = normalSpeed* hizcarpan;
                 chasing = false;
             }
         }

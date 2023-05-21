@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 [System.Serializable]
@@ -46,18 +47,26 @@ public class PlayerShooting : MonoBehaviour
     float tempBasiliTut = 0f;
     bool canFire = true;
 
+    bool firstTimeClick = false;
+    GumType? gumtypeTemp;
+
+    [Header("Yellow")]
+    [SerializeField] Image shotgunImage;
+    [SerializeField] GameObject hookCursor;
+    float? shotgunAmount = null;
+
 
     private void Awake() {
        // gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
         //gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
 
         gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
 
         gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
@@ -65,6 +74,8 @@ public class PlayerShooting : MonoBehaviour
 
         gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+
+        UITemizle();
     }
 
 
@@ -101,16 +112,71 @@ public class PlayerShooting : MonoBehaviour
         //Debug.Log((Colors)RandColorsInt());
         if(Input.GetMouseButton(0))
         {
+            if(!firstTimeClick)
+            {
+                var arr = gumTypeQueue.ToArray();
+                gumtypeTemp = Combine(arr[0], arr[1]);
+            }
+
+
+            firstTimeClick = true;
             tempBasiliTut+= Time.deltaTime;
             if(tempBasiliTut> basiliTutMax && canFire)
             {
                 GetComponent<Player>().HasarAl();
                 canFire = false;
+                // UI TEMİZLE
+                UITemizle();
+
+                return;
             }
+
+            if(!canFire)
+            {
+                return;
+            }
+
+            if(gumtypeTemp.Value.colors == Colors.Yellow)
+            {
+                shotgunImage.enabled = true;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, zemin))
+                {
+                    Vector3 dir = hit.point-transform.position;
+                    dir.y = 0;
+
+                    //Debug.Log(Vector3.Angle(dir, transform.right));
+                    ShotgunImageRotate(Vector3.SignedAngle(dir, transform.right,Vector3.up));
+                    ShotgunImageSize((tempBasiliTut / basiliTutMax));
+                    shotgunAmount = (tempBasiliTut / basiliTutMax);
+                }                
+            }
+
+            if(gumtypeTemp.Value.colors == Colors.Cyan)
+            {
+                hookCursor.SetActive(true);
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, zemin))
+                {
+                    Vector3 dir = hit.point - transform.position;
+                    dir.y = 0;
+                    dir.Normalize();
+                    dir*= Bullet.hookMaxRangeStatic*(tempBasiliTut / basiliTutMax);
+                    hookCursor.transform.position = dir + new Vector3(0,0.1f,0) + transform.position;
+
+                }
+            }
+            
+
+
         }
 
         if(Input.GetMouseButtonUp(0))
         {
+            UITemizle();
+            
+            firstTimeClick = false;
+            gumtypeTemp = null;
             if(canFire)
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -126,19 +192,27 @@ public class PlayerShooting : MonoBehaviour
                     gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
                     //Debug.Log(gumTypeQueue.Peek().colors);
                 }
-            }            
-
+            }
+            shotgunAmount = null;
             tempBasiliTut = 0f;
             canFire = true;
         }
     }
 
+
+    void UITemizle()
+    {
+        shotgunImage.enabled = false;
+        shotgunImage.fillAmount = 0f;
+        shotgunImage.rectTransform.sizeDelta = Vector2.one;
+        hookCursor.SetActive(false);
+    }
     void Shoot(Vector3 dir, float newPower)
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position,Quaternion.identity);
         bullet.GetComponent<Bullet>().gumType = Combine(gumTypeQueue.Dequeue(), gumTypeQueue.Peek());
         bullet.GetComponent<Bullet>().power = newPower;
-        bullet.GetComponent<Bullet>().Fire(dir);
+        bullet.GetComponent<Bullet>().Fire(dir,shotgunAmount);
     }
 
     GumType Combine(GumType gumType1, GumType gumType2)
@@ -154,7 +228,7 @@ public class PlayerShooting : MonoBehaviour
                 retGumType = gumTypeBase[ (int)Colors.Red];
                 break;
             case 1:
-                retGumType = gumTypeBase[ (int)Colors.Cyan];
+                retGumType = gumTypeBase[ (int)Colors.Yellow];
                 break;
             case 2:
                 retGumType = gumTypeBase[ (int)Colors.Green];
@@ -163,7 +237,7 @@ public class PlayerShooting : MonoBehaviour
                 retGumType = gumTypeBase[ (int)Colors.Magenta];
                 break;
             case 4:
-                retGumType = gumTypeBase[ (int)Colors.Yellow];
+                retGumType = gumTypeBase[ (int)Colors.Cyan];
                 break;
             case 6:
                 retGumType = gumTypeBase[ (int)Colors.Blue];
@@ -172,5 +246,26 @@ public class PlayerShooting : MonoBehaviour
         }
         
         return retGumType;
+    }
+
+
+
+
+
+    public void ShotgunImageRotate(float angle)
+    {
+        float amount = shotgunImage.fillAmount;
+        
+        shotgunImage.rectTransform.localEulerAngles = new Vector3(0,0,(90f+angle + (180f*amount))%360);
+
+       // Debug.Log(shotgunImage.rectTransform.localEulerAngles);
+    }
+
+    public void ShotgunImageSize(float range)
+    {
+        shotgunImage.rectTransform.sizeDelta = Mathf.Clamp(range* Bullet.shoutgunMaxRangeStatic,0f,Bullet.shoutgunMaxRangeStatic)
+                                                *Vector2.one;
+        shotgunImage.fillAmount = range;
+
     }
 }
