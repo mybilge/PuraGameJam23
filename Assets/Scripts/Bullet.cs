@@ -9,6 +9,8 @@ public class Bullet : MonoBehaviour
     public float power;
     Vector3 dir;
     [SerializeField] float speed;
+    public SpriteRenderer mermiSprite;
+    [SerializeField] GameObject PatlamaEfektRedPrefab;
 
     
     [Header("Green")]
@@ -230,6 +232,8 @@ public class Bullet : MonoBehaviour
                 player.GeriSek(hit.point, power * ittirRed);
             }
         }   
+       GameObject patlama= Instantiate(PatlamaEfektRedPrefab,transform.position,Quaternion.identity);
+        
 
         Destroy(gameObject); 
     }

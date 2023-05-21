@@ -6,8 +6,18 @@ public class Zehir : MonoBehaviour
 {
     public float zehirAmount;
 
+   [SerializeField] float canTime = 1f;
+
     List<Enemy> temasEnemy = new List<Enemy>();
 
+    float temp = 0;
+    private void Update() {
+        temp+= Time.deltaTime;
+        if(temp>= canTime*zehirAmount)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void OnTriggerStay(Collider other) {
         if(other.TryGetComponent<Enemy>(out var enemy))

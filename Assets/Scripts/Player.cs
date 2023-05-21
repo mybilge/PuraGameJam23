@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 
 public class Player : MonoBehaviour
@@ -16,6 +19,15 @@ public class Player : MonoBehaviour
     float cekmeHizi;
     public Transform zehirPrefab;
 
+    [SerializeField] float levelTime;
+    float levelTimeTemp;
+    [SerializeField] Image siyah;
+    [SerializeField] GameObject asansorKapıSol;
+    [SerializeField] GameObject asansorKapıSağ;
+    [SerializeField] GameObject asansorMain;
+    bool kazandi;
+    bool asansor;
+
     
 
     private void Awake() {
@@ -27,6 +39,10 @@ public class Player : MonoBehaviour
 
     public void HasarAl()
     {
+        if(kazandi)
+        {
+            return;
+        }
         can--;
         if(can<=0)
         {
@@ -39,6 +55,12 @@ public class Player : MonoBehaviour
     }
 
     private void Update() {
+        levelTimeTemp += Time.deltaTime;
+        if(levelTimeTemp>= levelTime && !asansor)
+        {
+            asansor = true;
+            Kazan();
+        }
         if(isHooking)
         {
             transform.position = Vector3.Lerp(transform.position, hookPos, cekmeHizi*Time.deltaTime);
@@ -75,9 +97,23 @@ public class Player : MonoBehaviour
         rb.AddForce(force * dir.normalized, ForceMode.Impulse);        
     }
 
+    void Kazan()
+    {
+        asansorKapıSağ.transform.DOLocalMoveX(-1.5f,1f);
+        asansorKapıSol.transform.DOLocalMoveX(1.5f, 1f).OnComplete(()=>{
+            asansorMain.SetActive(true);
+        });
+    }
 
+    public void YeniLevel()
+    {
+        kazandi = true;
+        siyah.DOFade(1,0.5f).OnComplete(()=>{
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+        });
+    }
 
-   
+    
 
 
 }

@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] Transform[] patrolPointsTf;
     public NavMeshAgent agent;
     Vector3? destination;
+    [SerializeField] SpriteRenderer maviEfekt;
+    [SerializeField] Sprite maviSprite;
 
     [SerializeField] float normalSpeed;
     [SerializeField] float chaseSpeed;
@@ -30,7 +32,7 @@ public class Enemy : MonoBehaviour
     public float hizcarpan = 1f;
 
     private void Awake() {
-
+        maviEfekt.sprite = null;
         GetComponent<SphereCollider>().radius = radius;
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
@@ -48,6 +50,8 @@ public class Enemy : MonoBehaviour
             agent.speed = 0;
             return;            
         }
+
+        maviEfekt.sprite = null;
 
         if(green)
         {
@@ -127,6 +131,7 @@ public class Enemy : MonoBehaviour
         if (temp < sabitTime)
         {
             temp = sabitTime;
+            maviEfekt.sprite = maviSprite;
         }
     }
 

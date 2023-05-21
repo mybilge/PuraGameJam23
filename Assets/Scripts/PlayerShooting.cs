@@ -60,10 +60,11 @@ public class PlayerShooting : MonoBehaviour
        // gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
         //gumTypeQueue.Enqueue(new GumType(null, (Colors)RandColorsInt()));
 
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
-        gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
+        gumTypeQueue.Enqueue(new GumType(null, Colors.Green));
 
         gumTypeQueue.Enqueue(new GumType(null, Colors.Blue));
         gumTypeQueue.Enqueue(new GumType(null, Colors.Red));
@@ -213,6 +214,7 @@ public class PlayerShooting : MonoBehaviour
         bullet.GetComponent<Bullet>().gumType = Combine(gumTypeQueue.Dequeue(), gumTypeQueue.Peek());
         bullet.GetComponent<Bullet>().power = newPower;
         bullet.GetComponent<Bullet>().Fire(dir,shotgunAmount);
+        bullet.GetComponent<Bullet>().mermiSprite.sprite = bullet.GetComponent<Bullet>().gumType.gumSprite;
     }
 
     GumType Combine(GumType gumType1, GumType gumType2)
@@ -265,7 +267,7 @@ public class PlayerShooting : MonoBehaviour
     {
         shotgunImage.rectTransform.sizeDelta = Mathf.Clamp(range* Bullet.shoutgunMaxRangeStatic,0f,Bullet.shoutgunMaxRangeStatic)
                                                 *Vector2.one;
-        shotgunImage.fillAmount = range;
+        shotgunImage.fillAmount = range/3;
 
     }
 }
